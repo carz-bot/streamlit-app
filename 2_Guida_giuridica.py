@@ -2,7 +2,6 @@
 
 
 import streamlit as st
-from utils.text_utils import load_txt_ascii_safe
 
 st.title("Guida giuridica")
 

@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+
 import streamlit as st
 import pandas as pd
 from io import BytesIO
+
 
 # ======================================
 # CONFIGURAZIONE PAGINA
@@ -13,51 +15,40 @@ st.set_page_config(
 
 st.title("📊 Piano di Transazione Fiscale – Simulatore")
 
+
 # ======================================
-# INTRODUZIONE WEB
+# INTRODUZIONE
 # ======================================
-intro = """
+st.markdown(
+    """
 ### Introduzione
 
 Questa sezione è dedicata alla rappresentazione e alla verifica della sostenibilità
 economico‑finanziaria di un accordo di ristrutturazione dei debiti di un’impresa
-individuale, con particolare riferimento alla proposta di transazione fiscale e
-contributiva prevista dal Codice della Crisi d’Impresa e dell’Insolvenza.
+individuale, con particolare riferimento alla transazione fiscale e contributiva
+prevista dal Codice della Crisi d’Impresa e dell’Insolvenza (CCII).
 
-Il piano considera la prosecuzione dell’attività in continuità diretta, a seguito di
-interventi strutturali già attuati sull’organizzazione e sulla composizione dei costi,
-con l’obiettivo di ricondurre l’attività entro un assetto economicamente sostenibile.
+Il simulatore consente di analizzare in modo dinamico i principali equilibri economici
+del piano, verificando la sostenibilità delle rate e valutando l’impatto di variazioni
+dei dati di base.
 
-Il simulatore sottostante consente di analizzare in modo dinamico i principali
-equilibri economici del piano, verificando la sostenibilità delle rate e valutando
-l’impatto di variazioni dei dati di base.
-
-**Esempio reale**  
-Con un fatturato annuo di 34.000 €, costi del personale pari a 18.000 € e altri costi
-per 6.000 €, l’attività genera un margine annuo di circa 10.000 €.  
-In tale scenario, una transazione fiscale pari al 35% del capitale (24.500 €),
-rateizzata in 84 mesi, comporta una rata mensile di circa 290 €, sostenibile rispetto
-al margine generato.
-
-I contenuti hanno finalità informative e non sostituiscono le valutazioni
-professionali previste dalla normativa vigente.
+I contenuti hanno finalità informative e non sostituiscono le valutazioni professionali.
 """
-st.markdown(intro)
+)
+
 
 # ======================================
-# AVVERTENZE LEGALI – SEZIONE DEDICATA
+# AVVERTENZE LEGALI
 # ======================================
 with st.expander("Avvertenze legali"):
-    st.write("""
-    I contenuti presenti su questo sito, inclusi gli strumenti di simulazione,
-    hanno finalità esclusivamente informative e divulgative.
-    Le elaborazioni non costituiscono consulenza professionale,
-    parere legale o fiscale, né attestazione ai sensi del Codice della Crisi
-    d’Impresa e dell’Insolvenza.
+    st.write(
+        """
+I contenuti presenti su questo sito hanno finalità esclusivamente informative.
+Le elaborazioni non costituiscono consulenza professionale, parere legale o fiscale,
+né attestazione ai sensi del Codice della Crisi d’Impresa e dell’Insolvenza.
+"""
+    )
 
-    Ogni valutazione operativa deve essere effettuata sul caso concreto,
-    con l’assistenza di professionisti qualificati.
-    """)
 
 # ======================================
 # INPUT DATI ECONOMICI
@@ -68,14 +59,31 @@ fatturato = st.number_input("Fatturato annuo (€)", value=34000, step=1000)
 costo_personale = st.number_input("Costo personale annuo (€)", value=18000, step=1000)
 altri_costi = st.number_input("Altri costi annui (€)", value=6000, step=500)
 
+
 # ======================================
 # INPUT DEBITO
 # ======================================
 st.header("2️⃣ Dati del debito")
 
-capitale = st.number_input("Capitale debito fiscale/contributivo (€)", value=70000, step=1000)
-percentuale = 0.35
-durata_mesi = st.number_input("Numero rate (mesi)", value=84, step=12)
+capitale = st.number_input(
+    "Capitale debito fiscale/contributivo (€)",
+    value=70000,
+    step=1000
+)
+
+percentuale = st.slider(
+    "Percentuale di transazione (%)",
+    min_value=10,
+    max_value=100,
+    value=35
+) / 100
+
+durata_mesi = st.number_input(
+    "Numero rate (mesi)",
+    value=84,
+    step=12
+)
+
 
 # ======================================
 # CALCOLI
@@ -87,6 +95,7 @@ importo_piano = capitale * percentuale
 rata_mensile = importo_piano / durata_mesi
 margine_post_rata = margine_mensile - rata_mensile
 
+
 # ======================================
 # RISULTATI
 # ======================================
@@ -96,13 +105,14 @@ c1, c2 = st.columns(2)
 
 with c1:
     st.metric("Capitale debito", f"{capitale:,.0f} €")
-    st.metric("Percentuale proposta", "35 %")
+    st.metric("Percentuale proposta", f"{int(percentuale*100)} %")
     st.metric("Importo piano", f"{importo_piano:,.0f} €")
 
 with c2:
     st.metric("Numero rate", durata_mesi)
     st.metric("Rata mensile", f"{rata_mensile:,.2f} €")
     st.metric("Margine dopo rata", f"{margine_post_rata:,.2f} €")
+
 
 # ======================================
 # VALUTAZIONE SOSTENIBILITÀ
@@ -114,10 +124,11 @@ if margine_post_rata >= 0:
 else:
     st.error("❌ Piano NON sostenibile con i flussi attuali")
 
+
 # ======================================
-# CONFRONTO LIQUIDAZIONE
+# CONFRONTO CON LIQUIDAZIONE
 # ======================================
-st.header("5️⃣ Confronto con liquidazione alternativa ")
+st.header("5️⃣ Confronto con liquidazione alternativa")
 
 recupero_liquidazione = st.number_input(
     "Recupero stimato per l’Erario in liquidazione (€)",
@@ -129,6 +140,7 @@ if importo_piano > recupero_liquidazione:
     st.success("✅ Continuità e transazione più conveniente per il Fisco")
 else:
     st.warning("⚠️ Liquidazione potenzialmente più conveniente")
+
 
 # ======================================
 # RIEPILOGO TABELLA
@@ -154,28 +166,30 @@ df = pd.DataFrame({
         altri_costi,
         round(margine_mensile, 2),
         capitale,
-        "35 %",
+        f"{int(percentuale*100)} %",
         durata_mesi,
         round(rata_mensile, 2),
         round(importo_piano, 2),
         recupero_liquidazione
     ]
 })
-st.dataframe(df)
+
+st.dataframe(df, use_container_width=True)
+
 
 # ======================================
 # DOWNLOAD EXCEL
 # ======================================
-def crea_excel(df):
+def crea_excel(dataframe: pd.DataFrame) -> BytesIO:
     buffer = BytesIO()
     with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
-        df.to_excel(writer, index=False, sheet_name="Piano")
+        dataframe.to_excel(writer, index=False, sheet_name="Piano")
     buffer.seek(0)
     return buffer
 
 st.download_button(
     label="⬇️ Scarica Excel",
     data=crea_excel(df),
-    file_name="piano_transazione_35percento.xlsx",
+    file_name="piano_transazione_fiscale.xlsx",
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )

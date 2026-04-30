@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import streamlit as st
-from utils_text_utils import load_txt_ascii_safe
+from utils.text_utils import load_txt_ascii_safe
 
 
 # =====================================================

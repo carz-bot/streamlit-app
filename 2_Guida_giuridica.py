@@ -1,43 +1,59 @@
 # -*- coding: utf-8 -*-
 
-
 import streamlit as st
-
 from utils.text_utils import load_txt_ascii_safe
 
-st.title("Guida giuridica")
 
-# Testo principale
-
-st.divider()
-
-# Stato iniziale
-if "show_approfondimento" not in st.session_state:
-    st.session_state.show_approfondimento = False
-
-# Bottone
-st.button(
-    "Apri approfondimento giuridico",
-    on_click=lambda: st.session_state.update(
-        {"show_approfondimento": True}
-    )
-)
-
-# Expander controllato
-with st.expander(
-    "Approfondimento giuridico",
-    expanded=st.session_state.show_approfondimento
-):
-    st.markdown(load_txt_ascii_safe("texts/approfondimento.txt"))
+# =====================================================
+# CONFIGURAZIONE PAGINA (DEVE ESSERE ALL'INIZIO)
+# =====================================================
 st.set_page_config(
     page_title="Guida giuridica – Crisi d’impresa",
     layout="centered"
 )
 
-st.title("📘 Guida giuridica – Piano e transazione fiscale")
 
 # =====================================================
-# INTRO GIURIDICA
+# TITOLO
+# =====================================================
+st.title("📘 Guida giuridica – Piano e transazione fiscale")
+
+
+# =====================================================
+# STATO SESSIONE
+# =====================================================
+if "show_approfondimento" not in st.session_state:
+    st.session_state.show_approfondimento = False
+
+
+# =====================================================
+# BOTTONE APPROFONDIMENTO
+# =====================================================
+st.button(
+    "📄 Apri approfondimento giuridico",
+    on_click=lambda: st.session_state.update(
+        {"show_approfondimento": True}
+    )
+)
+
+
+# =====================================================
+# EXPANDER APPROFONDIMENTO
+# =====================================================
+with st.expander(
+    "Approfondimento giuridico",
+    expanded=st.session_state.show_approfondimento
+):
+    st.markdown(
+        load_txt_ascii_safe("texts/approfondimento.txt")
+    )
+
+
+st.divider()
+
+
+# =====================================================
+# INTRODUZIONE GIURIDICA
 # =====================================================
 st.markdown(
     "### Finalità della guida\n\n"
@@ -47,6 +63,7 @@ st.markdown(
     "I contenuti hanno finalità informative e di orientamento e non sostituiscono "
     "la consulenza professionale né le valutazioni degli organi competenti."
 )
+
 
 # =====================================================
 # CONTINUITÀ AZIENDALE
@@ -63,6 +80,7 @@ st.markdown(
     "dei margini economici e della sostenibilità delle rate."
 )
 
+
 # =====================================================
 # TRANSAZIONE FISCALE
 # =====================================================
@@ -76,6 +94,7 @@ st.markdown(
     "lo stralcio integrale di sanzioni e interessi e una rateizzazione coerente con "
     "i flussi prospettici dell’impresa."
 )
+
 
 # =====================================================
 # CONVENIENZA PER IL FISCO
@@ -92,6 +111,7 @@ st.markdown(
     "stimato in ipotesi di liquidazione."
 )
 
+
 # =====================================================
 # MERITEVOLEZZA
 # =====================================================
@@ -106,6 +126,7 @@ st.markdown(
     "costituiscono indici positivi ai fini dell’accesso agli strumenti del CCII."
 )
 
+
 # =====================================================
 # RUOLO DEL SIMULATORE
 # =====================================================
@@ -119,6 +140,7 @@ st.markdown(
     "Le risultanze devono essere integrate da un’analisi completa del caso concreto "
     "e dalle attestazioni previste dalla normativa."
 )
+
 
 # =====================================================
 # AVVERTENZE FINALI

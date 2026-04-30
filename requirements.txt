@@ -3,4 +3,3 @@ pandas
 numpy
 plotly
 openpyxl
-load_txt_ascii_safe

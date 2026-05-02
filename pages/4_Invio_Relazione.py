@@ -1,6 +1,11 @@
-testo = """Spett.le
-Agenzia delle Entrate
-Ufficio competente (Dir. Prov.le),
+import streamlit as st
+
+st.title("Relazione preventiva illustrativa")
+
+st.markdown("""
+**Spett.le
+Agenzia delle Entrate**
+
 
 il sottoscritto professionista, in qualità di Professionista incaricato dal debitore, trasmette in allegato la documentazione relativa al piano di ristrutturazione dei debiti e alla proposta di transazione fiscale predisposti ai sensi del Codice della Crisi d’Impresa e dell’Insolvenza, per le valutazioni di competenza dell’Amministrazione.
 
@@ -19,4 +24,4 @@ Cordiali saluti
 [Codice fiscale / P.IVA]
 [Ordine professionale]
 [PEC]
-"""
+""")
